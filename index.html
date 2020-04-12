@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MemeO</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" type="image/gif/png" href="images/MemeoLogo.ico">
+
+</head>
+<!-- I know the code is really bad and complicated! MVC not implemented well.. 
+    
+    
+I had many bugs with the Mouse control functions! really ugly dont look! it took most of my time..
+ hope ill do better next time! -->
+
+<body>
+
+    <div class="page-navbar-container">
+        <button class="tablink home" onclick="openPage('Gallery', this, '#7f8fa6'), onLeaveAbout()" id="defaultOpen">Gallery</button>
+        <button class="tablink create" onclick="openPage('create', this, '#7f8fa6'), onLeaveAbout()">Create</button>
+        <button class="tablink" onclick="openPage('memes', this, '#7f8fa6'), onLeaveAbout()">Memes</button>
+        <button class="tablink" onclick="openPage('About', this, '#7f8fa6'), onAbout()"><div class="heartbeat">About</div></button>
+    </div>
+    <div id="Gallery" class="tabcontent">
+        <header class="gallery">
+            <nav class="gallery-navbar flex sp-bt slit-in-horizontal">
+                <div class="logo">
+                    <img class="logo-img-small logo-img-jump" src="images/Memeo.png" alt="" srcset="">
+                </div>
+                <div class="search-container">
+                    <label class="search" for="search">Search Photos</label><br/>
+                    <input oninput="renderFiltered(this.value)" type="text" id="search" placeholder="Search for a photo..">
+                </div>
+            </nav>
+        </header>
+        <section class="gallery-images">
+            Im Rendered With Images
+        </section>
+    </div>
+    <div id="create" class="tabcontent editor-container">
+        <header class="editor-navbar-container hide-mobile">
+            <nav class="editor-navbar flex sp-bt slit-in-horizontal ">
+                <div class="logo">
+                    <img class="logo-img-small logo-img-jump" src="images/Memeo.png" alt="" srcset="">
+                </div>
+                <div class="search-container hide-mobile">
+                    <div class="scroll-left">
+                        <p>Live! on Coding Academy 100JS... </p>
+
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <div class="canvas-container sddlide-in-elliptic-top-fwd">
+                <canvas class="canvas" width="500px" height="500px" id="canvas"></canvas>
+                <section>
+                    <div class="sidenav sidenav-desk flex col sp-bt jello-horizontal">
+                        <div>
+                            <h2 class="editor-header tracking-in-contract-bck">An Amazing Editor</h2>
+                        </div>
+                        <div class="flex sp-bt align-c justify-c">
+                            <div class="flex col sp-bt align-c justify-c">
+                                <input class="colorChange" onchange="setTextColor(this.value)" type="color" name="color" id="color" hidden>
+                                <div class="stickers-container scroll-left-slow">
+                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/beer.png" />
+                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/ciggarete.png" />
+                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/glassbrake.png" />
+                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/glasses.png" />
+
+
+
+                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/jointglasess.png" />
+                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/Thug-Life-Text.png" />
+                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/Thug-Life-Black-Hat-PNG.png" />
+                                </div>
+
+                                <div class="editor-btns sp-bt justify-c align-c wrap">
+                                    <input onclick="setFontSize(-2)" class="editor-btn" type="image" src="images/minus.png" />
+                                    <input onclick="setFontSize(2)" class="editor-btn" type="image" src="images/bigger.png" />
+                                    <input onclick="onDelete()" class="editor-btn" type="image" src="images/delete.png" />
+                                    <input onclick="onDeleteSticker()" class="editor-btn" type="image" src="images/trash.png" name="" id="">
+                                    <input onclick="onAddTextBox()" class="editor-btn" type="image" src="images/add.png" name="" id="">
+                                    <input onclick="document.querySelector('.colorChange').click()" class="editor-btn" type="image" src="images/color.png" />
+                                </div>
+                            </div>
+                            <div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="lower-editor-btn flex align-c col">
+                            <div>
+
+                                <input onclick="onSaveImg()" class="editor-btn-big" type="image" src="images/save.png" />
+                                <input onclick="onShare()" class="editor-btn-big" type="image" src="images/share.png" />
+                                <input onclick="document.querySelector('.input-upload').click()" class="editor-btn-big" type="image" src="images/addimage.png" />
+                            </div>
+                            <img class="logo-img-big logo-img-jump hide-mobile" src="images/Memeo.png" alt="" srcset="">
+                        </div>
+
+
+                        <div hidden=true>
+                            <label class="label-font" for="fileChooser">Add An Image!</label>
+                            <input class="input-upload" oninput="onUpload(event)" type="file" name="fileChooser" id="fileChooser" accept="image/jpeg">
+                        </div>
+                    </div>
+                </section>
+                <h3 class="save-modal blur-out-contract-bck hide">
+                    Saved!
+                </h3>
+                <div class="focus-box-container">
+
+
+
+                </div>
+            </div>
+        </main>
+
+        <div onclick="onToggleModal('modal-share')" id="modal-share" class="modal-focus hide">
+            <div class="modal-share flex col justify-c align-c hide">
+                <h3 class="modal-share-header heartbeat">Your Photo is Ready! Share with Friends!</h3>
+                <div class="share-container flex col justify-c">
+                    <div class="facebook-form">
+                        <form action="" method="POST" id="facebook" enctype="multipart/form-data" onsubmit="uploadImg(this, event)">
+                            <input name="img" id="imgData" type="hidden" />
+
+                            <button id="facebook" class="share-btn" type="submit">Publish</button>
+                    </div>
+
+                    </form>
+                    <a href="#" class="btn-share" onclick="downloadImg(this)" download="my-meme.jpg"> <img class="share-btn" alt="Download" src="images/download.png"></a>
+                    <form action="" method="POST" enctype="multipart/form-data" onsubmit="shareWhatsApp(this, event)">
+                        <input name="img" id="imgData" type="hidden" />
+                        <input type="image" class="share-btn" src="images/whatsapp.png" alt="">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="memes" class="tabcontent">
+        <header class="gallery">
+            <nav class="gallery-navbar flex align-c justify-c slit-in-horizontal">
+                <div class="logo">
+                    <img class="logo-img-small logo-img-jump" src="images/Memeo.png" alt="" srcset="">
+                </div>
+
+            </nav>
+        </header>
+        <section class="gallery-images meme-images">
+            Im Rendered With Memes
+        </section>
+    </div>
+    <div id="About" class="tabcontent">
+        <section class="about">
+            <div class="crawl">
+                <div class="title">
+                    <p>Sprint II</p>
+                    <h1>the Return of Abir</h1>
+                </div>
+                <p>On A Far Far Apartment at A Small dark Room.. (Allso Out of cookies), There was a Lazy Student... <br/><br/><br/> After Long hours of coding he decided to waste his time with CSS Instead of Fulfilling hes PassOver Mission.. => Drawing
+                    the HTML5 canvas...
+                </p>
+                <p>Being still traumatized from the last Code Review, Done by Yaron, He Wrote Notes.. ('Notes are very good..') <br/>And made sure all Hes Variables have Somewhat Logical names..</p>
+                <p>Hopefully one day, on this Far Far Apartment... Cookies && Freedom Will return back to the student…</p>
+            </div>
+        </section>
+    </div>
+    <script src="js/gallery-service.js"></script>
+    <script src="js/main-controller.js"></script>
+    <script src="js/editor-service.js"></script>
+</body>
+
+</html>
