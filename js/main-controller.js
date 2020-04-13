@@ -1,6 +1,9 @@
 'use strict'
+
+var gIsGrabbed = false;
 var aboutAudio = new Audio('sounds/about.mp3')
 var gIsMobile = false;
+var gCurrStickerEl
 window.onload = (event) => {
     console.log('windows', window.innerWidth)
     if (window.innerWidth < 550) {
@@ -25,6 +28,9 @@ function renderTextBox(box) {
      type="text" placeholder="" oninput="setText(this.value)" value="">
 `
     document.querySelector('.focus-box-container').innerHTML += strHtmls;
+    var elBox = document.getElementById(`${box.id}`)
+    elBox.style.top = box.y
+    elBox.style.left = box.x
 }
 
 function getFocusBox(id) {
@@ -54,6 +60,7 @@ function touchCountZero() {
 }
 
 function dragBox(e, id) {
+    if (gIsGrabbed) return
     e.stopPropagation()
     e.preventDefault()
     var idNum = +id
@@ -64,7 +71,9 @@ function dragBox(e, id) {
 
 
         input.addEventListener('touchmove', function(e) {
+
             gCurrTextBox.isFocus = true;
+
             var touchLocation = e.targetTouches[0];
 
 
@@ -95,6 +104,7 @@ function dragBox(e, id) {
     var input = document.getElementById(`${gCurrTextBox.id}`)
 
     input.addEventListener('mousedown', function(e) {
+        gIsGrabbed = true;
         gCurrTextBox.isFocus = true;
         isDown = true;
         offset = [
@@ -104,7 +114,7 @@ function dragBox(e, id) {
     }, true);
     document.addEventListener('mouseup', function() {
         isDown = false;
-
+        gIsGrabbed = false;
     }, true);
     document.addEventListener('mousemove', function(event) {
         gCurrTextBox.isFocus = true;
@@ -171,6 +181,8 @@ function onImgClicked(img) {
 
     gCurrImage = img
     drawImg(img)
+    if (gNumOfBoxs > 0) onDrawText()
+    if (gNumOfStickers > 0) onDrawSticker()
     var create = document.querySelector('.create')
     openPage('create', create, '#7f8fa6')
 }
@@ -231,12 +243,14 @@ function onDeleteSticker() {
 }
 
 function onDelete() {
+    if (gNumOfBoxs === 0) return
     var currIdx = 0
     gTextBoxs.forEach(box => {
         if (gCurrTextBox.id === box.id) {
             currIdx++
             gCurrTextBox.isShown = false;
             gCurrTextBox.isFocus = false;
+            gNumOfBoxs--
             var input = document.getElementById(`${gCurrTextBox.id}`)
             input.remove();
             clearCanvas()
@@ -249,6 +263,18 @@ function onDelete() {
     onDrawText()
 }
 
+function onChangeStickerSize(x, y) {
+
+    gCurrSticker.zoomX += x
+    gCurrSticker.zoomY += y
+    gCurrStickerEl.style.height = `${gCurrSticker.zoomY  + 100}px`
+    gCurrStickerEl.style.width = `${gCurrSticker.zoomX + 100}px`
+
+    clearCanvas()
+    drawImg(gCurrImage)
+    onDrawSticker()
+
+}
 // Navbar 
 
 function openPage(pageName, el, color) {
@@ -274,22 +300,20 @@ function uploadImg(elForm, ev) {
     // A function to be called if request succeeds
     function onSuccess(uploadedImgUrl) {
         uploadedImgUrl = encodeURIComponent(uploadedImgUrl)
-        document.querySelector('.facebook-form').innerHTML = `
-        <a class="btn" href="https://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}" title="Share on Facebook" target="_blank" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}'); return false;">
-           Success! click to Share on Facebook!   
-        </a>`
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}`)
+        onToggleModal('modal-share')
     }
     doUploadImg(elForm, onSuccess);
 }
 
 function shareWhatsApp(elForm, ev) {
-    ev.preventDefault();
+    ev.preventDefault()
 
     function onSuccess(uploadedImgUrl) {
         document.getElementById('imgData').value = gCanvas.toDataURL("image/jpeg");
         window.location = 'whatsapp://send?text=' + encodeURIComponent(uploadedImgUrl);
+        onToggleModal('modal-share')
     }
-
     doUploadImg(elForm, onSuccess)
 }
 
@@ -355,13 +379,13 @@ function onAddTextBox() {
 }
 
 function dragSticker(e, id) {
+    if (gIsGrabbed) return
     e.stopPropagation()
     e.preventDefault()
     getStickerId(id)
-
+    setCurrStickerEl()
     if (gIsMobile) {
-        var input = document.getElementById(`${gCurrSticker.id}`)
-        input.addEventListener('touchmove', function(e) {
+        gCurrStickerEl.addEventListener('touchmove', function(e) {
             gCurrSticker.isFocus = true;
             var touchLocation = e.targetTouches[0];
             if ((touchLocation.pageX - 170) < -50 || (touchLocation.pageX - 170) > 95) {
@@ -371,18 +395,18 @@ function dragSticker(e, id) {
                 var outOfCanvasY = true
             }
             if (!outOfCanvasX) {
-                input.style.left = touchLocation.pageX - 90 + 'px';
-                var inputPos = getPositionXY(input)
-                gCurrSticker.x = inputPos[0] + 40
+                gCurrStickerEl.style.left = touchLocation.pageX - 90 + 'px';
+                var gCurrStickerElPos = getPositionXY(gCurrStickerEl)
+                gCurrSticker.x = gCurrStickerElPos[0] - 30
             }
             if (!outOfCanvasY) {
-                input.style.top = touchLocation.pageY - 40 + 'px';
-                var inputPos = getPositionXY(input)
-                gCurrSticker.y = inputPos[1] - 90
+                gCurrStickerEl.style.top = touchLocation.pageY - 40 + 'px';
+                var gCurrStickerElPos = getPositionXY(gCurrStickerEl)
+                gCurrSticker.y = gCurrStickerElPos[1] - 90
             }
-            if (gNumOfBoxs > 0) setText(gCurrTextBox.text);
             clearCanvas()
             drawImg(gCurrImage)
+            if (gNumOfBoxs > 0) setText(gCurrTextBox.text);
             onDrawSticker()
         })
         return;
@@ -390,19 +414,21 @@ function dragSticker(e, id) {
     var mousePosition;
     var offset = [-100, 0];
     var isDown = false;
-    var input = document.getElementById(`${gCurrSticker.id}`)
-    input.addEventListener('mousedown', function(e) {
+    gCurrStickerEl.addEventListener('mousedown', function(e) {
+        gIsGrabbed = true;
         gCurrSticker.isFocus = true;
         isDown = true;
         offset = [
-            input.offsetLeft - e.clientX,
-            input.offsetTop - e.clientY
+            gCurrStickerEl.offsetLeft - e.clientX,
+            gCurrStickerEl.offsetTop - e.clientY
         ];
     }, true);
     document.addEventListener('mouseup', function() {
         isDown = false;
+        gIsGrabbed = false;
     }, true);
     document.addEventListener('mousemove', function(event) {
+
         console.log(' event', event)
         gCurrSticker.isFocus = true;
         if (isDown) {
@@ -417,14 +443,14 @@ function dragSticker(e, id) {
                 var outOfCanvasY = true
             }
             if (!outOfCanvasX) {
-                input.style.left = (mousePosition.x + offset[0]) + 'px';
-                var inputPos = getPositionXY(input)
-                gCurrSticker.x = (inputPos[0] - 20)
+                gCurrStickerEl.style.left = (mousePosition.x + offset[0] - gCurrSticker.zoomX) + 'px';
+                var gCurrStickerElPos = getPositionXY(gCurrStickerEl)
+                gCurrSticker.x = (gCurrStickerElPos[0] - 80)
             }
             if (!outOfCanvasY) {
-                input.style.top = (mousePosition.y + offset[1]) + 'px';
-                var inputPos = getPositionXY(input)
-                gCurrSticker.y = (inputPos[1] - 175)
+                gCurrStickerEl.style.top = (mousePosition.y + offset[1]) + 'px';
+                var gCurrStickerElPos = getPositionXY(gCurrStickerEl)
+                gCurrSticker.y = (gCurrStickerElPos[1] - 185)
             }
             clearCanvas()
             drawImg(gCurrImage)
@@ -437,6 +463,23 @@ function dragSticker(e, id) {
 }
 
 function onShare() {
-    document.getElementById('facebook').click()
     onToggleModal('modal-share')
+}
+
+function setCurrStickerEl() {
+    gCurrStickerEl = document.getElementById(`${gCurrSticker.id}`)
+}
+
+var gCarouselLocation = 0
+
+
+
+
+
+
+function onMoveCarousel(num) {
+
+    var stickerAnim = document.querySelector('.stickers-container')
+    stickerAnim.style.transform = `translateX(${gCarouselLocation += num});`;
+
 }

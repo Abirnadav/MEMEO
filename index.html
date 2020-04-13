@@ -18,6 +18,8 @@ I had many bugs with the Mouse control functions! really ugly dont look! it took
 
 <body>
 
+    <input onclick="onSignup()" class="asidenav heartbeat" type="image" src="images/signup.png" />
+
     <div class="page-navbar-container">
         <button class="tablink home" onclick="openPage('Gallery', this, '#7f8fa6'), onLeaveAbout()" id="defaultOpen">Gallery</button>
         <button class="tablink create" onclick="openPage('create', this, '#7f8fa6'), onLeaveAbout()">Create</button>
@@ -55,7 +57,7 @@ I had many bugs with the Mouse control functions! really ugly dont look! it took
             </nav>
         </header>
         <main>
-            <div class="canvas-container sddlide-in-elliptic-top-fwd">
+            <div class="canvas-container ">
                 <canvas class="canvas" width="500px" height="500px" id="canvas"></canvas>
                 <section>
                     <div class="sidenav sidenav-desk flex col sp-bt jello-horizontal">
@@ -64,27 +66,38 @@ I had many bugs with the Mouse control functions! really ugly dont look! it took
                         </div>
                         <div class="flex sp-bt align-c justify-c">
                             <div class="flex col sp-bt align-c justify-c">
+                                <div class="sticker-btns">
+                                    <input title="Zoom Out Sticker" onclick="onChangeStickerSize(-10, -10)" class="editor-btn" type="image" src="images/minus.png" />
+                                    <input title="Delete Sticker" onclick="onDeleteSticker()" class="editor-btn" type="image" src="images/trash.png" name="" id="">
+                                    <input title="Zoom In Sticker" onclick="onChangeStickerSize(10,10)" class="editor-btn" type="image" src="images/bigger.png" />
+
+                                </div>
+
                                 <input class="colorChange" onchange="setTextColor(this.value)" type="color" name="color" id="color" hidden>
-                                <div class="stickers-container scroll-left-slow">
-                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/beer.png" />
-                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/ciggarete.png" />
-                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/glassbrake.png" />
-                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/glasses.png" />
+                                <div class="carousel flex justify-c">
 
+                                    <input onclick="onMoveCarousel(-5)" class="arrow" type="image" src="images/arrow.png" />
+                                    <div class="stickers-container scroll-left-slow">
+                                        <div class="sticker-content flex sp-bt">
+                                            <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/beer.png" />
+                                            <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/ciggarete.png" />
+                                            <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/glassbrake.png" />
+                                            <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/jointglasess.png" />
+                                            <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/Thug-Life-Text.png" />
+                                            <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/Thug-Life-Black-Hat-PNG.png" />
+                                            <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/glasses.png" />
+                                        </div>
+                                    </div>
+                                    <input onclick="onMoveCarousel(5)" class="arrow right" type="image" src="images/arrow.png" />
 
-
-                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/jointglasess.png" />
-                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/Thug-Life-Text.png" />
-                                    <input onclick="onAddSticker(this.src)" class="sticker-image" type="image" src="stickers/Thug-Life-Black-Hat-PNG.png" />
                                 </div>
 
                                 <div class="editor-btns sp-bt justify-c align-c wrap">
-                                    <input onclick="setFontSize(-2)" class="editor-btn" type="image" src="images/minus.png" />
-                                    <input onclick="setFontSize(2)" class="editor-btn" type="image" src="images/bigger.png" />
-                                    <input onclick="onDelete()" class="editor-btn" type="image" src="images/delete.png" />
-                                    <input onclick="onDeleteSticker()" class="editor-btn" type="image" src="images/trash.png" name="" id="">
-                                    <input onclick="onAddTextBox()" class="editor-btn" type="image" src="images/add.png" name="" id="">
-                                    <input onclick="document.querySelector('.colorChange').click()" class="editor-btn" type="image" src="images/color.png" />
+                                    <input title="Minimize Font Size" onclick="setFontSize(-2)" class="editor-btn" type="image" src="images/minus.png" />
+                                    <input title="Maximize Font Size" onclick="setFontSize(2)" class="editor-btn" type="image" src="images/bigger.png" />
+                                    <input title="Add Text" onclick="onAddTextBox()" class="editor-btn" type="image" src="images/add.png" name="" id="">
+                                    <input title="Change Text Color" onclick="document.querySelector('.colorChange').click()" class="editor-btn" type="image" src="images/color.png" />
+                                    <input title="Delete Text Box" onclick="onDelete()" class="editor-btn" type="image" src="images/delete.png" />
                                 </div>
                             </div>
                             <div>
@@ -121,15 +134,15 @@ I had many bugs with the Mouse control functions! really ugly dont look! it took
             </div>
         </main>
 
-        <div onclick="onToggleModal('modal-share')" id="modal-share" class="modal-focus hide">
+        <div id="modal-share" class="modal-focus hide">
             <div class="modal-share flex col justify-c align-c hide">
                 <h3 class="modal-share-header heartbeat">Your Photo is Ready! Share with Friends!</h3>
                 <div class="share-container flex col justify-c">
                     <div class="facebook-form">
                         <form action="" method="POST" id="facebook" enctype="multipart/form-data" onsubmit="uploadImg(this, event)">
                             <input name="img" id="imgData" type="hidden" />
+                            <input class="share-btn" type="image" name="submit" src="images/facebook.png" alt="Submit" />
 
-                            <button id="facebook" class="share-btn" type="submit">Publish</button>
                     </div>
 
                     </form>

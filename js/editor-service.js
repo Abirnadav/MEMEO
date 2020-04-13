@@ -3,6 +3,8 @@ var gStickerId = 1000
 var gId = 100
 var gY = 150
 var gX = 250
+var gZoomX = 0
+var gZoomY = 0
 var gNumOfBoxs = 0
 var gNumOfStickers = 0
 var gCurrImage = 'images/blank.jpg'
@@ -15,6 +17,7 @@ var gSavedMemes
 var gFont = 50
 var gIsSave = false;
 var gStickers = []
+var gCopyRightOff = false
 var gKeywords = {
     'cat': 2,
     'celebrity': 7,
@@ -136,7 +139,6 @@ function createTextObj() {
 
     gCurrTextBox = gTextBoxs[textObject.num]
     gY + 50
-
     renderTextBox(gCurrTextBox)
     getFocusBox(textObject.id)
     onDrawText()
@@ -173,6 +175,7 @@ function setFontSize(num) {
     }
     gCurrTextBox.fontSize += num;
     onDrawText()
+    onDrawSticker()
 }
 
 function onDrawText() {
@@ -197,7 +200,9 @@ function drawText(text, x, y, box) {
     if (box.isFocus && box.isShown && !gIsSave) {
         drawRect(text, x, y)
     }
-
+    if (!box.isShown) return;
+    drawCopyRightText()
+    gCtx.beginPath();
     gCtx.font = `${gCurrTextBox.fontSize}px verdana`;
     gCtx.shadowColor = gCurrTextBox.textColor;
     gCtx.shadowBlur = 7;
@@ -207,8 +212,26 @@ function drawText(text, x, y, box) {
     gCtx.textAlign = 'center'
     gCtx.fillText(text, x, y)
     gCtx.strokeText(text, x, y)
+    gCtx.closePath();
 }
 
+function drawCopyRightText() {
+    if (gCopyRightOff) return;
+    gCtx.beginPath();
+    gCtx.font = `${24}px verdana`;
+
+    gCtx.shadowBlur = 7;
+    gCtx.lineWidth = 0.8;
+    gCtx.opacity = 0.2
+    gCtx.shadowBlur = 7;
+    gCtx.fillStyle = 'white';
+    gCtx.textAlign = 'center'
+    gCtx.fillText('Made With MEMEO', 140, gCanvas.height - 15)
+    gCtx.strokeText('Made With MEMEO', 140, gCanvas.height - 15)
+    gCtx.closePath();
+
+
+}
 // canvas Functions
 function resizeCanvas() {
     var elContainer = document.querySelector('.canvas-container');
@@ -230,6 +253,8 @@ function createStickerObj(url) {
         isShown: true,
         x: 100,
         y: 100,
+        zoomX: 0,
+        zoomY: 0,
         url: url,
         image: image,
     }
@@ -257,7 +282,7 @@ function onDrawSticker() {
     gStickers.forEach(sticker => {
 
         if (sticker.isShown) {
-            drawSticker(sticker.image, sticker.x, sticker.y)
+            drawSticker(sticker.image, sticker.x, sticker.y, sticker)
         }
 
 
@@ -284,13 +309,16 @@ function renderSticker() {
      id="${gCurrSticker.id}" class="sticker-box" type="image" src="${gCurrSticker.url}" draggable="false" />
 `
     document.querySelector('.focus-box-container').innerHTML += strHtmls;
+    var elSticker = document.getElementById(`${gCurrSticker.id}`)
+    elSticker.style.top = gCurrSticker.y
+    elSticker.style.left = gCurrSticker.x
 
 }
 
 
-function drawSticker(sticker, x, y) {
+function drawSticker(stickerImg, x, y, sticker) {
 
-    gCtx.drawImage(sticker, x, y, sticker.width, sticker.height)
+    gCtx.drawImage(stickerImg, x, y, stickerImg.width + sticker.zoomX, stickerImg.height + sticker.zoomY)
 
 }
 
@@ -335,6 +363,7 @@ function loadFromStorage(key) {
 }
 
 function downloadImg(elLink) {
+    onToggleModal('modal-share')
     var imgContent = gCanvas.toDataURL('image/jpeg');
     elLink.href = imgContent
 }
