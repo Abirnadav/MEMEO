@@ -335,6 +335,15 @@ function doUploadImg(elForm, onSuccess) {
 function toggleSaveModal() {
     var elSavedModal = document.querySelector('.save-modal')
     elSavedModal.classList.toggle('hide')
+}
+
+function toggleSignModal() {
+    var elSavedModal = document.querySelector('.sign-up-modal')
+    elSavedModal.classList.toggle('hide')
+}
+
+function onSignup() {
+    toggleSignModal()
 
 }
 
@@ -428,7 +437,6 @@ function dragSticker(e, id) {
         gIsGrabbed = false;
     }, true);
     document.addEventListener('mousemove', function(event) {
-
         console.log(' event', event)
         gCurrSticker.isFocus = true;
         if (isDown) {
@@ -455,7 +463,6 @@ function dragSticker(e, id) {
             clearCanvas()
             drawImg(gCurrImage)
             if (gNumOfBoxs > 0) setText(gCurrTextBox.text);
-
             onDrawSticker()
             console.log('gere', gCurrSticker)
         }
@@ -471,15 +478,8 @@ function setCurrStickerEl() {
 }
 
 var gCarouselLocation = 0
-
-
-
-
-
-
+    // Still not working !
 function onMoveCarousel(num) {
-
     var stickerAnim = document.querySelector('.stickers-container')
     stickerAnim.style.transform = `translateX(${gCarouselLocation += num});`;
-
 }

@@ -66,7 +66,7 @@
         .page-navbar-container {
             position: fixed;
             width: 100%;
-            z-index: 1;
+            z-index: 10;
             box-shadow: 0px 3px 18px 5px rgba(0, 0, 0, 0.486);
         }
         
@@ -600,10 +600,21 @@
         }
         /* Modals */
         
+        .sign-up-modal {
+            overflow: hidden;
+            color: #0984e3;
+            text-shadow: 6px 10px 10px #0984e3;
+            font-size: 8rem;
+            position: absolute;
+            z-index: 9;
+            height: 100%;
+            width: 100%;
+            background-color: #74b9ff;
+        }
+        
         .save-modal {
-            color: #9900ff;
-            text-shadow: 0 0 15px rgba(255, 255, 255, .5), 0 0 10px rgba(255, 255, 255, .5);
-            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+            color: #0984e3;
+            text-shadow: 6px 10px 10px #0984e3;
             font-size: 8rem;
             position: absolute;
             z-index: 5;
@@ -689,6 +700,7 @@
         }
         
         .about {
+            z-index: 9;
             overflow-y: hidden;
             overflow-x: hidden;
             display: flex;
@@ -704,11 +716,12 @@
             line-height: 150%;
             perspective: 400px;
             text-align: justify;
-            cursor: url('../images/emoji_off.png'), auto;
+            cursor: url('../images/lightsaber.png'), auto;
             text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18;
         }
         
         .crawl {
+            z-index: 10;
             position: relative;
             top: 99999px;
             transform-origin: 50% 100%;
@@ -755,6 +768,23 @@
             position: absolute;
         }
         /* style Helpers  */
+        
+        .text-pop-up-top {
+            animation: text-pop-up-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        }
+        
+        @keyframes text-pop-up-top {
+            0% {
+                transform: translateY(0);
+                transform-origin: 50% 50%;
+                text-shadow: none;
+            }
+            100% {
+                transform: translateY(-50px);
+                transform-origin: 50% 50%;
+                text-shadow: 0 1px 0 #cccccc, 0 2px 0 #cccccc, 0 3px 0 #cccccc, 0 4px 0 #cccccc, 0 5px 0 #cccccc, 0 6px 0 #cccccc, 0 7px 0 #cccccc, 0 8px 0 #cccccc, 0 9px 0 #cccccc, 0 50px 30px rgba(0, 0, 0, 0.3);
+            }
+        }
         
         .scroll-left {
             height: 50px;

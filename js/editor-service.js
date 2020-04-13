@@ -18,26 +18,6 @@ var gFont = 50
 var gIsSave = false;
 var gStickers = []
 var gCopyRightOff = false
-var gKeywords = {
-    'cat': 2,
-    'celebrity': 7,
-    'politic': 2,
-    'movie': 4,
-    'animal': 1,
-    'baby': 1,
-    'happy': 12,
-    'tv': 7,
-    'books': 0,
-    'sport': 2,
-    'comics': 6,
-    'funny': 1,
-    'cute': 12,
-    'love': 7,
-    'kid': 12,
-    'dog': 2,
-    'nevo': 1,
-}
-
 var gImgs = [{
     id: 1,
     url: 'meme-imgs/1.jpg',
@@ -219,7 +199,6 @@ function drawCopyRightText() {
     if (gCopyRightOff) return;
     gCtx.beginPath();
     gCtx.font = `${24}px verdana`;
-
     gCtx.shadowBlur = 7;
     gCtx.lineWidth = 0.8;
     gCtx.opacity = 0.2
@@ -280,12 +259,9 @@ function onAddSticker(img) {
 
 function onDrawSticker() {
     gStickers.forEach(sticker => {
-
         if (sticker.isShown) {
             drawSticker(sticker.image, sticker.x, sticker.y, sticker)
         }
-
-
     })
 }
 
@@ -312,23 +288,16 @@ function renderSticker() {
     var elSticker = document.getElementById(`${gCurrSticker.id}`)
     elSticker.style.top = gCurrSticker.y
     elSticker.style.left = gCurrSticker.x
-
 }
 
 
 function drawSticker(stickerImg, x, y, sticker) {
-
     gCtx.drawImage(stickerImg, x, y, stickerImg.width + sticker.zoomX, stickerImg.height + sticker.zoomY)
 
 }
 
 // Draw image on canvas 
 function drawImg(img) {
-    if (gIsMobile) {
-        var offSet = [img.height * 3.35, img.width * 3.35]
-    } else {
-        var offSet = [img.height * 2.8, img.width * 2.8]
-    }
     gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height)
 }
 

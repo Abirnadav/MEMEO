@@ -11,15 +11,19 @@
 
 </head>
 <!-- I know the code is really bad and complicated! MVC not implemented well.. 
-    
-    
 I had many bugs with the Mouse control functions! really ugly dont look! it took most of my time..
- hope ill do better next time! -->
+Ill do better next time! -->
+
+<!-- Added a function to Fetch images from my server (located on my computer) using node.js -->
 
 <body>
 
     <input onclick="onSignup()" class="asidenav heartbeat" type="image" src="images/signup.png" />
-
+    <div onclick="onSignup()" class="sign-up-modal justify-c align-c hide">
+        <h3 class="text-pop-up-top">
+            Joking....<br/> <br/>Its a free Meme Editor!
+        </h3>
+    </div>
     <div class="page-navbar-container">
         <button class="tablink home" onclick="openPage('Gallery', this, '#7f8fa6'), onLeaveAbout()" id="defaultOpen">Gallery</button>
         <button class="tablink create" onclick="openPage('create', this, '#7f8fa6'), onLeaveAbout()">Create</button>
@@ -126,6 +130,7 @@ I had many bugs with the Mouse control functions! really ugly dont look! it took
                 <h3 class="save-modal blur-out-contract-bck hide">
                     Saved!
                 </h3>
+
                 <div class="focus-box-container">
 
 
@@ -183,6 +188,8 @@ I had many bugs with the Mouse control functions! really ugly dont look! it took
             </div>
         </section>
     </div>
+
+
     <script src="js/gallery-service.js"></script>
     <script src="js/main-controller.js"></script>
     <script src="js/editor-service.js"></script>
