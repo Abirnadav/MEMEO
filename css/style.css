@@ -605,8 +605,8 @@
             color: #0984e3;
             text-shadow: 6px 10px 10px #0984e3;
             font-size: 8rem;
-            position: absolute;
-            z-index: 9;
+            position: fixed;
+            z-index: 11;
             height: 100%;
             width: 100%;
             background-color: #74b9ff;
